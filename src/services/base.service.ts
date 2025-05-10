@@ -1,21 +1,21 @@
-import { Audit } from "../models";
+import { Audit } from "../models/base.model";
 import { BaseRepository } from "../repositories/base.repository";
 import { Filters, PaginatedResponse, PaginationOptions } from "../types";
 
 export class BaseService<T extends Audit> {
-  protected model: BaseRepository<T>;
+  protected repository: BaseRepository<T>;
 
-  constructor(model: BaseRepository<T>) {
-    this.model = model;
+  constructor(repository: BaseRepository<T>) {
+    this.repository = repository;
   }
 
   async getAll(
     filters: Filters = {},
     pagination: PaginationOptions = { page: 1, limit: 10 }
   ): Promise<PaginatedResponse<T>> {
-    const data = await this.model.findAll(filters, pagination);
+    const data = await this.repository.findAll(filters, pagination);
 
-    const total = await this.model.count(filters);
+    const total = await this.repository.count(filters);
 
     return {
       data,
@@ -29,18 +29,18 @@ export class BaseService<T extends Audit> {
   }
 
   async getById(uid: string): Promise<T> {
-    return this.model.findById(uid);
+    return this.repository.findById(uid);
   }
 
   async create(data: Partial<T>): Promise<T> {
-    return this.model.create(data);
+    return this.repository.create(data);
   }
 
   async update(uid: string, data: Partial<T>): Promise<T> {
-    return this.model.update(uid, data);
+    return this.repository.update(uid, data);
   }
 
   async delete(uid: string): Promise<void> {
-    this.model.delete(uid);
+    this.repository.delete(uid);
   }
 }
