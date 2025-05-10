@@ -1,6 +1,6 @@
 import { FastifyInstance, FastifyPluginOptions } from "fastify";
 import { BaseController } from "../controllers/base.controller";
-import { Entity } from "../types";
+import { Audit } from "../models";
 
 // This is a type for route schema that can be customized per service
 export interface RouteSchema {
@@ -11,7 +11,7 @@ export interface RouteSchema {
   delete?: any;
 }
 
-export function buildRoutes<T extends Entity>(
+export function buildRoutes<T extends Audit>(
   fastify: FastifyInstance,
   options: FastifyPluginOptions,
   controller: BaseController<T>,

@@ -1,8 +1,9 @@
 import { FastifyReply, FastifyRequest } from "fastify";
+import { Audit } from "../models";
 import { BaseService } from "../services/base.service";
-import { Entity, Filters, PaginationOptions } from "../types";
+import { Filters, PaginationOptions } from "../types";
 
-export class BaseController<T extends Entity> {
+export class BaseController<T extends Audit> {
   protected service: BaseService<T>;
 
   constructor(service: BaseService<T>) {

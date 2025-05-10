@@ -1,8 +1,10 @@
 import cors from "@fastify/cors";
 import helmet from "@fastify/helmet";
 import swagger from "@fastify/swagger";
+import swaggerUi from "@fastify/swagger-ui";
 import dotenv from "dotenv";
-import fastify, { FastifyInstance } from "fastify";
+import fastify, { FastifyInstance, FastifyReply } from "fastify";
+import { FastifyRequestExtended } from "./types";
 import { errorHandler } from "./utils/errors";
 import logger from "./utils/logger";
 
@@ -14,6 +16,51 @@ const server: FastifyInstance = fastify({
 });
 
 server.log = logger;
+
+// Global onRequest hook
+server.addHook(
+  "onRequest",
+  (request: FastifyRequestExtended, reply: FastifyReply, done) => {
+    const startTime = Date.now();
+
+    request.requestTime = startTime;
+
+    if (!request.id) {
+      request.id =
+        (request.headers["x-request-id"] as string) || Date.now().toString();
+    }
+
+    server.log.info({
+      requestId: request.id,
+      method: request.method,
+      url: request.url,
+      headers: request.headers,
+      message: "Request received",
+    });
+
+    done(); // Continue processing the request
+  }
+);
+
+// Global onResponse hook
+server.addHook(
+  "onResponse",
+  (request: FastifyRequestExtended, reply: FastifyReply, done) => {
+    const endTime = Date.now();
+    const startTime = request.requestTime || endTime;
+    const responseTime = endTime - startTime;
+
+    server.log.info({
+      requestId: request.id,
+      method: request.method,
+      url: request.url,
+      statusCode: reply.statusCode,
+      responseTime: `${responseTime}ms`,
+      message: "Response sent",
+    });
+    done(); // Continue processing the response
+  }
+);
 
 // Register plugins
 server.register(cors, {
@@ -40,7 +87,7 @@ server.register(helmet);
 // Register Swagger documentation
 server.register(swagger, {
   prefix: "/documentation",
-  swagger: {
+  openapi: {
     info: {
       title: process.env.SERVICE_NAME || "TypeScript Microservice API",
       description: "API documentation",
@@ -50,7 +97,25 @@ server.register(swagger, {
       url: "https://swagger.io",
       description: "Find more info here",
     },
+    components: {
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
+        },
+      },
+    },
+    security: [
+      {
+        bearerAuth: [],
+      },
+    ],
   },
+});
+
+server.register(swaggerUi, {
+  routePrefix: "/documentation",
 });
 
 // Register your routes here
@@ -60,7 +125,7 @@ server.register(swagger, {
 server.setErrorHandler(errorHandler);
 
 // Root route
-server.get("/", async (_request, reply) => {
+server.get("/", async (_request, _reply) => {
   return {
     status: "ok",
     service: process.env.SERVICE_NAME || "typescript-microservice-template",
@@ -68,15 +133,10 @@ server.get("/", async (_request, reply) => {
   };
 });
 
-// Health check endpoint
-server.get("/health", async (_request, reply) => {
-  return { status: "ok" };
-});
-
 // Start the server
 const start = async () => {
   try {
-    const PORT = parseInt(process.env.PORT || "3000");
+    const PORT = parseInt(process.env.PORT || "8000");
     await server.listen({ port: PORT, host: "0.0.0.0" });
     const address = server.server.address();
     if (address) {
@@ -105,9 +165,6 @@ process.on("uncaughtException", (err) => {
   process.exit(1);
 });
 
-// Start server if this file is run directly
-if (require.main === module) {
-  start();
-}
+start();
 
 export default server;
