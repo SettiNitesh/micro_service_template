@@ -4,6 +4,7 @@ import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
 import dotenv from "dotenv";
 import fastify, { FastifyInstance, FastifyReply } from "fastify";
+import ajvPlugin from "./plugins/ajv.plugin";
 import { FastifyRequestExtended } from "./types";
 import { errorHandler } from "./utils/errors";
 import logger from "./utils/logger";
@@ -83,6 +84,8 @@ server.register(cors, {
 });
 
 server.register(helmet);
+
+server.register(ajvPlugin);
 
 // Register Swagger documentation
 server.register(swagger, {
