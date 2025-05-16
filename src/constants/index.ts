@@ -1,1 +1,1 @@
-export * from "./customer/customer.constants";
+export * from "./user/user.constants";
