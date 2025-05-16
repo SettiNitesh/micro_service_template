@@ -7,11 +7,13 @@ export interface DatabaseConfig {
         user: string;
         password: string;
         database: string;
+        connectionTimeoutMillis: number;
+        statementTimeoutMillis: number;
       }
     | string;
   migrations: {
     directory: string;
-    tableName?: string;
+    tableName: string;
   };
   seeds?: {
     directory: string;
@@ -20,9 +22,7 @@ export interface DatabaseConfig {
     min: number;
     max: number;
   };
-  ssl?:
-    | boolean
-    | {
-        rejectUnauthorized: boolean;
-      };
+  acquireConnectionTimeout: number;
+  asyncStackTraces: boolean;
+  debug: boolean;
 }

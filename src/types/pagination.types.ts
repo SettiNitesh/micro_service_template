@@ -1,15 +1,20 @@
-export interface PaginationOptions {
-  page: number;
-  limit: number;
+export interface PaginateOptions {
+  page_size?: number;
+  current_page?: number;
+  distinctWith?: string;
 }
 
-export interface PaginatedResponse<T> {
+export interface PaginationMeta {
+  total_items: number;
+  current_page: number;
+  page_size: number;
+  total_pages: number;
+}
+
+export interface PaginatedResult<T> {
   data: T[];
-  pagination: {
-    page: number;
-    limit: number;
-    total: number;
-    totalPages: number;
+  meta: {
+    pagination: PaginationMeta;
   };
 }
 
