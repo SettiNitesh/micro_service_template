@@ -1,4 +1,4 @@
-import { LogTrace } from "../log";
+import { LogTrace } from '../log';
 
 export interface CreateUserParams {
   input: {

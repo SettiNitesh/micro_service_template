@@ -1,5 +1,5 @@
-import { FastifyBaseLogger } from "fastify";
-import { Knex } from "knex";
+import { FastifyBaseLogger } from 'fastify';
+import { Knex } from 'knex';
 
 export interface LogQuery {
   logger: FastifyBaseLogger;

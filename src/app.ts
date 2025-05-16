@@ -1,25 +1,24 @@
-import cors from "@fastify/cors";
-import fastifyEnv from "@fastify/env";
-import helmet from "@fastify/helmet";
-import swagger from "@fastify/swagger";
-import swaggerUi from "@fastify/swagger-ui";
-import envSchema from "env-schema";
-import fastify, { FastifyInstance } from "fastify";
-import fastifyHealthcheck from "fastify-healthcheck";
-import knexConfig from "../config/knexfile";
-import schema from "./common/schemas/env.schema";
-import { corsOptions, SWAGGER_CONFIG, SWAGGER_UI_CONFIGS } from "./config";
-import { extractLogTrace, requestLogging, responseLogging } from "./hooks";
-import { ajvPlugin } from "./plugins";
-import knex from "./plugins/knex/knex";
-import { userRoutes } from "./routes";
-import { errorHandler } from "./utils";
-import logger from "./utils/logger";
+import cors from '@fastify/cors';
+import fastifyEnv from '@fastify/env';
+import helmet from '@fastify/helmet';
+import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
+import envSchema from 'env-schema';
+import fastify, { FastifyInstance } from 'fastify';
+import fastifyHealthcheck from 'fastify-healthcheck';
+import { knexConfig } from '../config';
+import { schema } from './common';
+import { corsOptions, SWAGGER_CONFIG, SWAGGER_UI_CONFIGS } from './config';
+import { extractLogTrace, requestLogging, responseLogging } from './hooks';
+import { ajvPlugin, knexPlugin } from './plugins';
+import { userRoutes } from './routes';
+import { logger } from './utils';
+import { errorHandler } from './utils/error';
 
 const create = async () => {
   // Create Fastify instance
   const server: FastifyInstance = fastify({
-    logger: true,
+    logger: true
   });
 
   server.log = logger;
@@ -32,24 +31,24 @@ const create = async () => {
   // Env vars plugin
   await server.register(fastifyEnv, {
     dotenv: true,
-    schema: schema,
+    schema: schema
   });
 
   // Global Hooks
-  server.addHook("onRequest", extractLogTrace);
-  server.addHook("preValidation", requestLogging);
-  server.addHook("onResponse", responseLogging);
+  server.addHook('onRequest', extractLogTrace);
+  server.addHook('preValidation', requestLogging);
+  server.addHook('onResponse', responseLogging);
 
   // Register plugins
   await server.register(helmet);
   await server.register(ajvPlugin);
-  await server.register(knex, knexConfig);
+  await server.register(knexPlugin, knexConfig);
   await server.register(swagger, SWAGGER_CONFIG);
   await server.register(swaggerUi, SWAGGER_UI_CONFIGS);
   await server.register(cors, corsOptions);
 
   // Register Routes
-  server.register(userRoutes, { prefix: "/api/v1" });
+  server.register(userRoutes, { prefix: '/api/v1' });
 
   return server;
 };
@@ -58,17 +57,17 @@ const create = async () => {
 const start = async () => {
   const fastify = await create();
   const defaultSchema = {
-    type: "object",
+    type: 'object',
     properties: {
       HOST: {
-        type: "string",
-        default: "0.0.0.0",
+        type: 'string',
+        default: '0.0.0.0'
       },
       PORT: {
-        type: "number",
-        default: 4444,
-      },
-    },
+        type: 'number',
+        default: 4444
+      }
+    }
   };
   try {
     const config = envSchema<{
@@ -76,7 +75,7 @@ const start = async () => {
       PORT: number;
     }>({
       schema: defaultSchema,
-      dotenv: true,
+      dotenv: true
     });
 
     fastify.listen(
@@ -95,7 +94,7 @@ const start = async () => {
   }
 };
 
-if (process.env.NODE_ENV !== "test") {
+if (process.env.NODE_ENV !== 'test') {
   start();
 }
 

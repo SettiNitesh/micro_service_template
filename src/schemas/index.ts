@@ -1,3 +1,3 @@
-import userSchemas from "./user";
+import userSchemas from './user';
 
 export { userSchemas };

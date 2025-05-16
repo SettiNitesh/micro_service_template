@@ -1,1 +1,3 @@
-export * from "./knexfile";
+import knexConfig from './knexfile';
+
+export { knexConfig };

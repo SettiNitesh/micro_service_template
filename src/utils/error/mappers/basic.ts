@@ -1,4 +1,4 @@
-import CustomError from "../custom.error";
+import CustomError from '../custom.error';
 
 const basic = (error: any) => {
   if (error instanceof CustomError) {

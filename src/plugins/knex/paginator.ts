@@ -1,25 +1,14 @@
-import { Knex } from "knex";
-import { PaginatedResult, PaginateOptions } from "../../types";
+import { Knex } from 'knex';
+import { PaginatedResult, PaginateOptions } from '../../types';
 
 export const PAGE_SIZE = 10;
 export const CURRENT_PAGE = 1;
 
-const EXCLUDED_ATTR_FROM_COUNT = [
-  "order",
-  "columns",
-  "limit",
-  "offset",
-  "select",
-  "group",
-];
+const EXCLUDED_ATTR_FROM_COUNT = ['order', 'columns', 'limit', 'offset', 'select', 'group'];
 
 async function paginate<T>(
   this: Knex.QueryBuilder,
-  {
-    page_size = PAGE_SIZE,
-    current_page = CURRENT_PAGE,
-    distinctWith,
-  }: PaginateOptions
+  { page_size = PAGE_SIZE, current_page = CURRENT_PAGE, distinctWith }: PaginateOptions
 ): Promise<PaginatedResult<T>> {
   const countByQuery = this.clone();
 
@@ -27,21 +16,19 @@ async function paginate<T>(
   const offset = (page - 1) * page_size;
 
   // Remove statements that will interfere with the count query
-  (countByQuery as any)._statements = (countByQuery as any)._statements.filter(
-    (statement: any) => {
-      return !EXCLUDED_ATTR_FROM_COUNT.includes(statement.grouping);
-    }
-  );
+  (countByQuery as any)._statements = (countByQuery as any)._statements.filter((statement: any) => {
+    return !EXCLUDED_ATTR_FROM_COUNT.includes(statement.grouping);
+  });
 
   if (distinctWith) {
     countByQuery.countDistinct(`${distinctWith} as total`);
   } else {
-    countByQuery.count("* as total");
+    countByQuery.count('* as total');
   }
 
   const [counter, result_1] = await Promise.all([
     countByQuery.first(),
-    this.offset(offset).limit(page_size),
+    this.offset(offset).limit(page_size)
   ]);
 
   const total = Number(counter?.total || 0);
@@ -54,9 +41,9 @@ async function paginate<T>(
         total_items: total,
         current_page: page,
         page_size,
-        total_pages: totalPages,
-      },
-    },
+        total_pages: totalPages
+      }
+    }
   };
 }
 

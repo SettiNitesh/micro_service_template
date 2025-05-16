@@ -1,12 +1,7 @@
-import { ERROR_LOGGING_MESSAGES } from "./constants";
-import CustomError from "./custom.error";
-import errorHandler from "./handler";
-import {
-  DEFAULT_MAPPERS,
-  paramsValidation,
-  postgressError,
-  unstructuredError,
-} from "./mappers";
+import { ERROR_LOGGING_MESSAGES } from './constants';
+import CustomError from './custom.error';
+import errorHandler from './handler';
+import { DEFAULT_MAPPERS, paramsValidation, postgressError, unstructuredError } from './mappers';
 
 export {
   CustomError,
@@ -15,5 +10,5 @@ export {
   errorHandler,
   paramsValidation,
   postgressError,
-  unstructuredError,
+  unstructuredError
 };

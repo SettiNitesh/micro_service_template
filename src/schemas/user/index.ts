@@ -1,7 +1,7 @@
-import createUser from "./create.user";
+import createUser from './create.user';
 
 export const userSchemas = {
-  createUserSchema: createUser,
+  createUserSchema: createUser
 };
 
 export default userSchemas;

@@ -1,3 +1,3 @@
-import userHandler from "./user/user.handler";
+import userHandler from './user/user.handler';
 
 export { userHandler };

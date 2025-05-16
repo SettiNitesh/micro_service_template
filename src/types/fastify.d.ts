@@ -1,7 +1,7 @@
 // fastify.d.ts
-import "fastify";
+import 'fastify';
 
-declare module "fastify" {
+declare module 'fastify' {
   interface FastifyRequest {
     requestTime?: number;
     logTrace?: Record<string, string>;

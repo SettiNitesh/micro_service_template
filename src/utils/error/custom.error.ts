@@ -1,5 +1,5 @@
-import { STATUS_CODES, STATUS_TEXTS } from "./constants";
-import { formatDetail } from "./helper";
+import { STATUS_CODES, STATUS_TEXTS } from './constants';
+import { formatDetail } from './helper';
 
 class CustomError extends Error {
   constructor(httpCode: number, errors: any) {
@@ -13,8 +13,8 @@ class CustomError extends Error {
       return [
         {
           message: STATUS_TEXTS[this._code as keyof typeof STATUS_TEXTS],
-          code: STATUS_CODES[this._code as keyof typeof STATUS_CODES],
-        },
+          code: STATUS_CODES[this._code as keyof typeof STATUS_CODES]
+        }
       ];
     }
     return errors;
@@ -26,7 +26,7 @@ class CustomError extends Error {
 
   get response() {
     return {
-      errors: this._errors,
+      errors: this._errors
     };
   }
 
@@ -34,7 +34,7 @@ class CustomError extends Error {
     httpCode,
     message,
     property,
-    code,
+    code
   }: {
     httpCode: number;
     message: string;
@@ -49,7 +49,7 @@ class CustomError extends Error {
     return {
       message: formatDetail(message),
       ...(property && { property }),
-      code,
+      code
     };
   }
 }

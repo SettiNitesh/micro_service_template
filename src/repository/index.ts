@@ -1,3 +1,3 @@
-import usersRepository from "./users/users.repository";
+import usersRepository from './users/users.repository';
 
 export { usersRepository };

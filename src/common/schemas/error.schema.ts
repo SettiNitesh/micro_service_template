@@ -1,33 +1,33 @@
 export const commonErrorSchema = {
-  type: "object",
+  type: 'object',
   properties: {
     errors: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
+        type: 'object',
         properties: {
-          message: { type: "string" },
-          code: { type: "string" },
-        },
-      },
-    },
-  },
+          message: { type: 'string' },
+          code: { type: 'string' }
+        }
+      }
+    }
+  }
 };
 
 export const validationErrorSchema = {
-  type: "object",
+  type: 'object',
   properties: {
     errors: {
-      type: "array",
+      type: 'array',
       items: {
-        type: "object",
+        type: 'object',
         properties: {
-          property: { type: "string" },
-          ...commonErrorSchema.properties.errors.items.properties,
-        },
-      },
-    },
-  },
+          property: { type: 'string' },
+          ...commonErrorSchema.properties.errors.items.properties
+        }
+      }
+    }
+  }
 };
 
 export const errorSchemas: { [key: number]: unknown } = {
@@ -41,5 +41,5 @@ export const errorSchemas: { [key: number]: unknown } = {
   429: commonErrorSchema,
   500: commonErrorSchema,
   502: commonErrorSchema,
-  504: commonErrorSchema,
+  504: commonErrorSchema
 };

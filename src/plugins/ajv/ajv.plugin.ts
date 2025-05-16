@@ -1,20 +1,20 @@
-import Ajv from "ajv";
-import AjvErrors from "ajv-errors";
-import addFormats from "ajv-formats";
-import AjvKeywords from "ajv-keywords";
-import { FastifyInstance, FastifyPluginAsync } from "fastify";
-import fp from "fastify-plugin";
-import { commonRequestSchemas } from "../../common/schemas/request.schema";
-import { commonResponseSchemas } from "../../common/schemas/response.schema";
+import Ajv from 'ajv';
+import AjvErrors from 'ajv-errors';
+import addFormats from 'ajv-formats';
+import AjvKeywords from 'ajv-keywords';
+import { FastifyInstance, FastifyPluginAsync } from 'fastify';
+import fp from 'fastify-plugin';
+import { commonRequestSchemas } from '../../common/schemas/request.schema';
+import { commonResponseSchemas } from '../../common/schemas/response.schema';
 
 const defaultAjvSettings: any = {
   removeAdditional: false, // remove additional properties
   useDefaults: true, // replace missing properties with default values
   coerceTypes: true, // change data type of data to match type keyword
-  allErrors: true, // check all rules before reporting errors
+  allErrors: true // check all rules before reporting errors
 };
 
-const defaultKeywords = ["transform", "uniqueItemProperties"];
+const defaultKeywords = ['transform', 'uniqueItemProperties'];
 
 const validateSchema =
   (ajv: Ajv) =>
@@ -37,7 +37,7 @@ const ajvPlugin: FastifyPluginAsync = async (
   fastify: FastifyInstance,
   {
     settings = defaultAjvSettings,
-    keywords = defaultKeywords,
+    keywords = defaultKeywords
   }: { settings?: any; keywords?: string[] }
 ) => {
   // adding common schema in fastify
@@ -54,15 +54,15 @@ const ajvPlugin: FastifyPluginAsync = async (
     addFormats(ajv);
     addFastifySchema(fastify);
     addFastifySchema(ajv);
-    fastify.decorate("validateSchema", validateSchema(ajv));
+    fastify.decorate('validateSchema', validateSchema(ajv));
     fastify.setValidatorCompiler(({ schema }) => {
       return ajv.compile(schema);
     });
     // Add custom formats if needed
-    ajv.addFormat("phone", /^\+?[1-9]\d{1,14}$/);
+    ajv.addFormat('phone', /^\+?[1-9]\d{1,14}$/);
   } catch (err) {
     fastify.log.error(err);
-    fastify.log.error("AJV compilation failed");
+    fastify.log.error('AJV compilation failed');
     throw Error(`AJV compilation failed ${err}`);
   }
 };

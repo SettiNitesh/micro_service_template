@@ -1,5 +1,1 @@
-export {
-  extractLogTrace,
-  requestLogging,
-  responseLogging,
-} from "./logging/logging";
+export { extractLogTrace, requestLogging, responseLogging } from './logging/logging';
