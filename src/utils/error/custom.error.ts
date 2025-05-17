@@ -45,6 +45,25 @@ class CustomError extends Error {
     return new CustomError(httpCode, errors);
   }
 
+  static createHttpError({
+    httpCode,
+    errorResponse,
+    downstream_system
+  }: {
+    httpCode: number;
+    errorResponse: any;
+    downstream_system: string;
+  }) {
+    const errors = [];
+
+    switch (downstream_system) {
+      default:
+        errors.push(this.parse(errorResponse?.message, 'INTERNAL_SERVER_ERROR'));
+        break;
+    }
+    return new CustomError(httpCode, errors);
+  }
+
   static parse(message: string, property?: string, code?: string) {
     return {
       message: formatDetail(message),
