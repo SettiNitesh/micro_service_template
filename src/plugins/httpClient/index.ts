@@ -26,7 +26,7 @@ const getTraceHeadersFromHeaders = (headers: string[]) => {
   );
 };
 
-const httpClientWrapper =
+export const httpClientWrapper =
   (fastify: FastifyInstance) =>
   async ({
     url,
@@ -43,17 +43,17 @@ const httpClientWrapper =
     exclude_response_data_logging = false
   }: {
     url: string;
-    path: string;
+    path?: string;
     method: string;
     body: unknown;
     headers: any;
     timeout: number;
-    downstream_system: string;
-    source_system: string;
-    domain: string;
-    functionality: string;
-    response_type: string;
-    exclude_response_data_logging: boolean;
+    downstream_system?: string;
+    source_system?: string;
+    domain?: string;
+    functionality?: string;
+    response_type?: string;
+    exclude_response_data_logging?: boolean;
   }) => {
     const common = {
       request: {
@@ -91,7 +91,7 @@ const httpClientWrapper =
         message: 'REST Response Context:'
       });
 
-      return response.data;
+      return response;
     } catch (error: any) {
       fastify.log.error({
         ...common,
@@ -107,7 +107,7 @@ const httpClientWrapper =
         throw CustomError.createHttpError({
           httpCode: error.response.status,
           errorResponse: error.response.data,
-          downstream_system
+          downstream_system: downstream_system || 'unknown'
         });
       }
 

@@ -10,7 +10,17 @@ import { knexConfig } from '../config';
 import { schema } from './common';
 import { corsOptions, SWAGGER_CONFIG, SWAGGER_UI_CONFIGS } from './config';
 import { extractLogTrace, requestLogging, responseLogging } from './hooks';
-import { ajvPlugin, knexPlugin } from './plugins';
+import {
+  ajvPlugin,
+  bullTasksPlugin,
+  httpClientPlugin,
+  knexPlugin,
+  pubsub,
+  rabbitmqPlugin,
+  supabaseAuthPlugin,
+  supabaseBucketPlugin,
+  supabasePlugin
+} from './plugins';
 import { userRoutes } from './routes';
 import { logger } from './utils';
 import { errorHandler } from './utils/error';
@@ -46,6 +56,13 @@ const create = async () => {
   await server.register(swagger, SWAGGER_CONFIG);
   await server.register(swaggerUi, SWAGGER_UI_CONFIGS);
   await server.register(cors, corsOptions);
+  await server.register(supabasePlugin);
+  await server.register(supabaseAuthPlugin);
+  await server.register(supabaseBucketPlugin);
+  await server.register(rabbitmqPlugin);
+  await server.register(bullTasksPlugin);
+  await server.register(httpClientPlugin);
+  await server.register(pubsub);
 
   // Register Routes
   server.register(userRoutes, { prefix: '/api/v1' });

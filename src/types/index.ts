@@ -1,3 +1,4 @@
+export * from './bull.types';
 export * from './db.config.types';
 export * from './db.table.types';
 export * from './log';
