@@ -12,6 +12,7 @@ const rabbitmqPlugin = async (fastify: FastifyInstance) => {
       connection,
       channel
     });
+    fastify.log.info('RABBITMQ CONNECTION & CHANNEL DECORATED');
   } catch (error) {
     fastify.log.error(error, 'ERROR CONNECTING TO RABBITMQ');
   }

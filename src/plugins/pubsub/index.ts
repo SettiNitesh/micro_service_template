@@ -148,7 +148,4 @@ const eventPlugin = async (fastify: FastifyInstance) => {
   fastify.decorate('publishEvent', publishWrapper(fastify));
 };
 
-export default fp(eventPlugin, {
-  name: 'fastify-pubsub',
-  dependencies: ['fastify-rabbitmq']
-});
+export default fp(eventPlugin);
