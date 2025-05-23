@@ -125,11 +125,9 @@ const publishWrapper = (fastify: FastifyInstance) => {
         });
       }
 
-      await channelConsume(queuedetail!, (msg) => {
+      return await channelConsume(queuedetail!, (msg) => {
         console.log(`Received Message : ${JSON.stringify(msg)}`);
       });
-
-      return true;
     } catch (error) {
       fastify.log.error(error, 'ERROR PUBLISHING MESSAGE');
       return false;
